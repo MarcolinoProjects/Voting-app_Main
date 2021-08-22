@@ -11,12 +11,12 @@ func GetVotingSessionInfo(c *gin.Context) {
 	var candidateInfo SessionInfo
 	if err := c.ShouldBindUri(&candidateInfo); err != nil {
 		log.Println(err.Error())
-		c.JSON(400, gin.H{"msg": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": err.Error()})
 		return
 	}
 	res, err := models.FetchVotingSession(candidateInfo.SessionUuid)
 	if err == nil {
-		c.AsciiJSON(200, res)
+		c.AsciiJSON(http.StatusOK, res)
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "Voting Session Not Found"})
 	}
