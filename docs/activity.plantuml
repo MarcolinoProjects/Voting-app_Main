@@ -1,0 +1,37 @@
+@startuml
+title "Create new voting session"
+start
+card "Golang API" {
+    :User Create new voting;
+    :API in Golang saves info about the voting on redis;
+}
+floating note: API focused on Create/Delete/Get voting sessions and vote
+stop
+@enduml
+
+@startuml
+title "Voting in someone"
+card "Golang API" {
+    :User is voting in the session {{uuid}} and votes in Pedro;
+    :API send a message with the data from the vote to rabbitmq;
+}
+card "Golang Worker" {
+    :Worker in Golang listen to it cont the
+    votes for pedro and save it to redis cache
+    and send a new message to rabbitmq;
+    floating note: this worker is focused\non count the votes and save the result.
+}
+
+while (someone is watching the result screen?)
+  card "Node.js Event API" {
+      :"Node.js is listening to messages
+      related to the voting session {{uuid}}";
+      :"Node.js sends the current
+      result to the frontend by socket.io";
+  }
+  floating note: Node.js API is\nfocused on inform new events.
+endwhile
+
+stop
+
+@enduml

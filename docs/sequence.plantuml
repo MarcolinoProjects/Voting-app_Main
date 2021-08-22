@@ -4,19 +4,6 @@ participant "Golang API"
 participant "node.js(Socket.io) API"
 database Redis
 queue Rabbitmq
-User -> A: Create voting session
-activate A #FFBBBB
 
-A -> A: Internal call
-activate A #DarkSalmon
-
-A -> B: << createRequest >>
-activate B
-
-B --> A: RequestCreated
-deactivate B
-deactivate A
-A -> User: Done
-deactivate A
 
 @enduml
