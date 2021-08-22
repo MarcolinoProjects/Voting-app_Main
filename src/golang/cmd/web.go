@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"os/signal"
@@ -15,15 +14,9 @@ func web() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 
-	route := gin.Default()
-	route.POST("/create", handlers.CreateVoting)
-	route.GET("/list", handlers.ListVoting)
-	route.GET("/:sessionUuid", handlers.GetVotingSessionInfo)
-	route.DELETE("/:sessionUuid", handlers.DeleteVotingSession)
-	route.POST("/:sessionUuid/:candidateUuid", handlers.VoteOnCandidate)
 	srv := &http.Server{
 		Addr:    ":8080",
-		Handler: route,
+		Handler: handlers.SetupRouter(),
 	}
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
