@@ -24,7 +24,7 @@ func assertVotingSessionDeleted(t *testing.T, w *httptest.ResponseRecorder) {
 }
 
 func whenFetchVotingSessionRequest(t *testing.T, req *http.Request, err error, votingSession models.Voting, w *httptest.ResponseRecorder, router *gin.Engine) *httptest.ResponseRecorder {
-	req, err = http.NewRequest("GET", "/"+votingSession.UUID, nil)
+	req, err = http.NewRequest("GET", "/api/"+votingSession.UUID, nil)
 	if err != nil {
 		t.Fatal("Failure on Request")
 	}
@@ -34,7 +34,7 @@ func whenFetchVotingSessionRequest(t *testing.T, req *http.Request, err error, v
 	return w
 }
 func whenDeleteVotingSessionRequest(t *testing.T, req *http.Request, err error, votingSession models.Voting, w *httptest.ResponseRecorder, router *gin.Engine) *httptest.ResponseRecorder {
-	req, err = http.NewRequest("DELETE", "/"+votingSession.UUID, nil)
+	req, err = http.NewRequest("DELETE", "/api/"+votingSession.UUID, nil)
 	if err != nil {
 		t.Fatal("Failure on Request")
 	}
@@ -55,7 +55,7 @@ func assertVotingSessionWasCreated(t *testing.T, w *httptest.ResponseRecorder) (
 }
 
 func whenCreateRequest(payload *strings.Reader, router *gin.Engine, w *httptest.ResponseRecorder) *http.Request {
-	req, _ := http.NewRequest("POST", "/create", payload)
+	req, _ := http.NewRequest("POST", "/api/create", payload)
 	req.Header.Add("Content-Type", "application/json")
 	router.ServeHTTP(w, req)
 	return req
