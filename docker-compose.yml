@@ -31,7 +31,7 @@ services:
       context: src/golang
       dockerfile: Dockerfile
     ports:
-      - "8085:8080"
+      - "8080:8080"
     networks:
       - voting-network
   golang_worker:
