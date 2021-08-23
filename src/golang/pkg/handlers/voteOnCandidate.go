@@ -19,7 +19,7 @@ func VoteOnCandidate(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "Voting Session Not Found"})
 		return
 	}
-	err = res.VoteOnCandidate(candidateInfo.CandidateUuid)
+	err = res.VoteOnCandidateAction(candidateInfo.CandidateUuid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"msg": "Candidate Not Found"})
 		return

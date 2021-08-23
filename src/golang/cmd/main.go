@@ -11,7 +11,7 @@ func main() {
 	defer config.ShutDown()
 	flag.Parse()
 	if *WorkerMode {
-		return
+		worker()
 	} else {
 		web()
 	}

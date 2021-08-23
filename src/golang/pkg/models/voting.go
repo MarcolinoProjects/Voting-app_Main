@@ -36,6 +36,15 @@ type VotingAction struct {
 	CandidateUuid string `json:"candidateUuid"`
 }
 
+func UnmarshalVotingAction(vote []byte) (*VotingAction, error) {
+	var votingAction VotingAction
+	err := json.Unmarshal(vote, &votingAction)
+	if err != nil {
+		return nil, err
+	}
+	return &votingAction, nil
+}
+
 //NewVoting :constructor for Voting sessions
 func NewVoting(UUID string, name string, candidates []Candidate) *Voting {
 	return &Voting{UUID: UUID, Name: name, Candidates: candidates}
@@ -78,8 +87,8 @@ func (v *Voting) SendMessageOnRabbit() {
 	config.AppContext.RabbitConfig.Send(string(marshal), "application/json")
 }
 
-//VoteOnCandidate send vote to rabbitmq where the worker will take care of the counting part
-func (v *Voting) VoteOnCandidate(uuid string) error {
+//VoteOnCandidateAction send vote to rabbitmq where the worker will take care of the counting part
+func (v *Voting) VoteOnCandidateAction(uuid string) error {
 	for i := range v.Candidates {
 		if v.Candidates[i].UUID == uuid {
 			votingAction := VotingAction{CandidateUuid: uuid, VotingUUID: v.UUID}
@@ -92,4 +101,25 @@ func (v *Voting) VoteOnCandidate(uuid string) error {
 		}
 	}
 	return errors.New("candidate not found on voting session")
+}
+func (v *Voting) VoteOnCandidate(uuid string) error {
+	for i := range v.Candidates {
+		if v.Candidates[i].UUID == uuid {
+			v.Candidates[i].Votes += 1
+			v.PersistOnRedis()
+			return nil
+		}
+	}
+	return errors.New("candidate not found on voting session")
+}
+func CountVote(voting *VotingAction) error {
+	session, err := FetchVotingSession(voting.VotingUUID)
+	if err != nil {
+		return err
+	}
+	err = session.VoteOnCandidate(voting.CandidateUuid)
+	if err != nil {
+		return err
+	}
+	return nil
 }

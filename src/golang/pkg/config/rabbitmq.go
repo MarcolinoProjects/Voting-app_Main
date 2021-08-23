@@ -66,3 +66,16 @@ func (r *RabbitConfig) shutdown() {
 	err = r.conn.Close()
 	failOnError(err, "Failed to close connection with rabbit")
 }
+func (r *RabbitConfig) ListenToQueue(queueName string) <-chan amqp.Delivery {
+	msgs, err := r.channel.Consume(
+		queueName, // queue
+		"",        // consumer
+		true,      // auto-ack
+		false,     // exclusive
+		false,     // no-local
+		false,     // no-wait
+		nil,       // args
+	)
+	failOnError(err, "Failed to register a consumer")
+	return msgs
+}

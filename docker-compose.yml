@@ -34,6 +34,18 @@ services:
       - "8085:8080"
     networks:
       - voting-network
+  golang_worker:
+    restart: on-failure
+    command:
+      - worker
+    environment:
+      REDIS_HOST: redis:6379
+      RABBIT_HOST: amqp://rabbitmq:rabbitmq@rabbit:5672/
+    build:
+      context: src/golang
+      dockerfile: Dockerfile
+    networks:
+      - voting-network
 networks:
   voting-network:
     name: voting-network
