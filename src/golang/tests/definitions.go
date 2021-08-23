@@ -19,9 +19,22 @@ func assertVotingSessionFetched(t *testing.T, w *httptest.ResponseRecorder) {
 		t.Fatal("Failure on Unmarshal")
 	}
 }
+func assertVotingSessionDeleted(t *testing.T, w *httptest.ResponseRecorder) {
+	assert.Equal(t, 200, w.Code)
+}
 
 func whenFetchVotingSessionRequest(t *testing.T, req *http.Request, err error, votingSession models.Voting, w *httptest.ResponseRecorder, router *gin.Engine) *httptest.ResponseRecorder {
 	req, err = http.NewRequest("GET", "/"+votingSession.UUID, nil)
+	if err != nil {
+		t.Fatal("Failure on Request")
+	}
+	req.Header.Add("Content-Type", "application/json")
+	w = httptest.NewRecorder()
+	router.ServeHTTP(w, req)
+	return w
+}
+func whenDeleteVotingSessionRequest(t *testing.T, req *http.Request, err error, votingSession models.Voting, w *httptest.ResponseRecorder, router *gin.Engine) *httptest.ResponseRecorder {
+	req, err = http.NewRequest("DELETE", "/"+votingSession.UUID, nil)
 	if err != nil {
 		t.Fatal("Failure on Request")
 	}

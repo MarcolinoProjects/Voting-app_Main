@@ -37,3 +37,14 @@ func TestRetrieveInfoAboutVoteSession(t *testing.T) {
 	w = whenFetchVotingSessionRequest(t, req, err, votingSession, w, router)
 	assertVotingSessionFetched(t, w)
 }
+func TestDeleteVoteSession(t *testing.T) {
+	router := handlers.SetupRouter()
+	w := httptest.NewRecorder()
+
+	payload := givenVotingSession()
+	req := whenCreateRequest(payload, router, w)
+	votingSession, err := assertVotingSessionWasCreated(t, w)
+
+	w = whenDeleteVotingSessionRequest(t, req, err, votingSession, w, router)
+	assertVotingSessionDeleted(t, w)
+}
