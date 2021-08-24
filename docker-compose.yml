@@ -21,6 +21,7 @@ services:
     networks:
       - voting-network
   golang_api:
+    image: vorkurk/go-voting-app:latest
     restart: on-failure
     command:
       - web
@@ -35,6 +36,7 @@ services:
     networks:
       - voting-network
   golang_worker:
+    image: vorkurk/go-voting-app:latest
     restart: on-failure
     command:
       - worker
@@ -47,6 +49,7 @@ services:
     networks:
       - voting-network
   nodejs:
+    image: vorkurk/nodejs-event-app:latest
     restart: on-failure
     ports:
       - "9000:9000"
@@ -59,6 +62,7 @@ services:
       - voting-network
   ui:
     restart: on-failure
+    image: vorkurk/react-voting-app:latest
     build:
       context: src/react
       dockerfile: Dockerfile
