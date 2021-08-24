@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &myLabels
+    app: voting-app
+    part: ui
+  name: react-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *myLabels
+  template:
+    metadata:
+      labels: *myLabels
+    spec:
+      containers:
+        - name: ui
+          image: vorkurk/react-voting-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-ui
+  labels: &myLabels
+    app: voting-app
+    part: ui
+spec:
+  selector: *myLabels
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: default
+
+---

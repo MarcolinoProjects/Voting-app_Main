@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &myLabels
+    app: voting-app
+    part: event-api
+  name: nodejs-event-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *myLabels
+  template:
+    metadata:
+      labels: *myLabels
+    spec:
+      containers:
+        - name: events-socketio
+          image: vorkurk/nodejs-event-app:latest
+          imagePullPolicy: Always
+          env:
+            - name: RABBIT_HOST
+              value: amqp://rabbitmq:rabbitmq@rabbit:5672/
+          ports:
+            - containerPort: 9000
+              name: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-event-api
+  labels: &myLabels
+    app: voting-app
+    part: event-api
+spec:
+  selector: *myLabels
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: default

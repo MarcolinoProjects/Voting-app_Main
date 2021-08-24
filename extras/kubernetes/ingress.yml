@@ -1,0 +1,62 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt-production
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: marcolino.victor@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - selector: { }
+        http01:
+          ingress:
+            class: nginx
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "voting.marcolino.dev.br"
+spec:
+  secretName: certificates
+  issuerRef:
+    name: letsencrypt-production
+  commonName: voting.marcolino.dev.br
+  dnsNames:
+    - voting.marcolino.dev.br
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "voting"
+spec:
+  rules:
+    - host: voting.marcolino.dev.br
+      http:
+        paths:
+          - path: /api
+            backend:
+              service:
+                name: golang
+                port:
+                  number: 80
+            pathType: Prefix
+          - path: /events
+            backend:
+              service:
+                name: nodejs-event-api
+                port:
+                  number: 80
+            pathType: Prefix
+          - path: /
+            backend:
+              service:
+                name: react-ui
+                port:
+                  number: 80
+            pathType: Prefix
+  tls:
+    - hosts:
+        - voting.marcolino.dev.br
+      secretName: certificates

@@ -21,6 +21,12 @@ jobs:
           push: true
           context: src/golang
           tags: vorkurk/go-voting-app:latest
+      - name: kubectl config
+        run: |
+          echo '${{ secrets.KUBEC }}' > kubeconfig.yml
+          export KUBECONFIG=$(pwd)/kubeconfig.yml
+          kubectl version
+          kubectl apply -n votingapp -f extras/kubernetes/golang.yml
   react:
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +44,12 @@ jobs:
           push: true
           context: src/react
           tags: vorkurk/react-voting-app:latest
+      - name: kubectl config
+        run: |
+          echo '${{ secrets.KUBEC }}' > kubeconfig.yml
+          export KUBECONFIG=$(pwd)/kubeconfig.yml
+          kubectl version
+          kubectl apply -n votingapp -f extras/kubernetes/react.yml
   nodejs:
     runs-on: ubuntu-latest
     steps:
@@ -55,3 +67,9 @@ jobs:
           push: true
           context: src/nodejs
           tags: vorkurk/nodejs-event-app:latest
+      - name: kubectl config
+        run: |
+          echo '${{ secrets.KUBEC }}' > kubeconfig.yml
+          export KUBECONFIG=$(pwd)/kubeconfig.yml
+          kubectl version
+          kubectl apply -n votingapp -f extras/kubernetes/nodejs.yml

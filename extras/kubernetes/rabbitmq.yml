@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &myLabels
+    app: rabbitmq
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *myLabels
+  template:
+    metadata:
+      labels: *myLabels
+    spec:
+      volumes:
+        - name: rabbitmq-conf
+          configMap:
+            name: rabbitmq
+            defaultMode: 0777
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management-alpine
+          ports:
+            - containerPort: 15672
+            - containerPort: 5672
+              name: default
+          volumeMounts:
+            - mountPath: /etc/rabbitmq/rabbitmq.conf
+              subPath: rabbitmq.conf
+              name: rabbitmq-conf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbit
+  labels: &myLabels
+    app: rabbitmq
+spec:
+  selector: *myLabels
+  ports:
+    - protocol: "TCP"
+      port: 5672
+      targetPort: default
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rabbitmq
+data:
+  rabbitmq.conf: |
+    loopback_users.guest = false
+    listeners.tcp.default = 5672
+    default_pass = rabbitmq
+    default_user = rabbitmq
+    default_vhost = /
+    management.tcp.port = 15672
