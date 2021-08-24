@@ -4,6 +4,7 @@ import votingGolangApi from "../../api/Voting";
 import {VotingSession} from "../../api/Voting/types";
 import Candidate from "../../components/Candidate";
 import {Divider} from "@material-ui/core";
+import socketIO from "../../api/Events";
 
 
 // @ts-ignore
@@ -12,6 +13,15 @@ export default function ResultPage(props) {
 
     const [votingSession, setVotingSession] = useState(undefined as VotingSession | undefined);
     const history = useHistory();
+    useEffect(() => {
+        socketIO.listenToEvent(uuid, (dataFromServer: any) => {
+            if (typeof dataFromServer == "string") {
+                setVotingSession(JSON.parse(dataFromServer) as VotingSession)
+            }
+
+        })
+    }, [uuid])
+
     useEffect(() => {
         votingGolangApi.fetchVotingSession(uuid).then(
             (res) => {
@@ -32,10 +42,12 @@ export default function ResultPage(props) {
     return (
         <>
             {votingSession && <div>
-                <h1>Voting Session: {votingSession.name}<br/> vote <a href={`/voting/${votingSession.uuid}`}>here</a>!</h1>
-                <Divider />
+                <h1>Voting Session Result: {votingSession.name}<br/> vote <a href={`/voting/${votingSession.uuid}`}>here</a>!
+                </h1>
+                <Divider/>
                 <h1>Results:</h1>
-                {votingSession.candidates?.map(item => <Candidate key={item.uuid} candidate={item} voting={votingSession}/>)}
+                {votingSession.candidates?.map(item => <Candidate key={item.uuid} candidate={item}
+                                                                  voting={votingSession}/>)}
             </div>}
         </>
     );
