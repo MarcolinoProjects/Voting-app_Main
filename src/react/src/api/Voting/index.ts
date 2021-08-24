@@ -1,14 +1,15 @@
 import axios, {AxiosInstance} from "axios";
 import {CandidatesEntity, VotingSession} from "./types";
+const {REACT_APP_API_HOST} = process.env;
 
-export const HOST = 'http://192.168.1.10:8080'
+export const HOST = REACT_APP_API_HOST ? REACT_APP_API_HOST : "http://localhost:8080/api"
 
 class VotingApi {
     private axiosIstance: AxiosInstance;
 
     constructor() {
         this.axiosIstance = axios.create({
-            baseURL: `${HOST}/api`,
+            baseURL: HOST,
             timeout: 60000,
         });
     }
