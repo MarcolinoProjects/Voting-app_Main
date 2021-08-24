@@ -46,6 +46,29 @@ services:
       dockerfile: Dockerfile
     networks:
       - voting-network
+  nodejs:
+    restart: on-failure
+    ports:
+      - "9000:9000"
+    environment:
+      RABBIT_HOST: amqp://rabbitmq:rabbitmq@rabbit:5672/
+    build:
+      context: src/nodejs
+      dockerfile: Dockerfile
+    networks:
+      - voting-network
+  ui:
+    restart: on-failure
+    build:
+      context: src/react
+      dockerfile: Dockerfile
+      args:
+        SOCKET_IO_PATH: /events/socket.io
+        SOCKET_IO_HOST: http://localhost:9000
+    ports:
+      - "3000:80"
+    networks:
+      - voting-network
 networks:
   voting-network:
     name: voting-network

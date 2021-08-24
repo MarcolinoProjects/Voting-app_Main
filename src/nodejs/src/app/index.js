@@ -2,7 +2,7 @@ const express = require('express');
 const Server = require('socket.io');
 const app = express();
 const expressServer = app.listen(9000);
-const io = Server(expressServer, {path: '/mysubdir/socket.io', cors: {
+const io = Server(expressServer, {path: '/events/socket.io', cors: {
         origin: "*",
         methods: ["GET", "POST"]
     }});

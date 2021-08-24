@@ -7,7 +7,7 @@ COPY go.mod go.sum /src/
 RUN ls -la && go build -o main -v ./cmd/*.go
 
 FROM alpine:latest
-MAINTAINER Victor Marcolino<marcolino.victor@gmail.com>
+LABEL org.opencontainers.image.authors="Victor Marcolino<marcolino.victor@gmail.com>"
 EXPOSE 8080
 COPY --from=builder /src/main /src/main
 WORKDIR /src

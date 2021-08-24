@@ -1,6 +1,5 @@
 var amqp = require('amqplib/callback_api');
-
-const host = 'amqp://rabbitmq:rabbitmq@localhost'
+const host = process.env.RABBIT_HOST? process.env.RABBIT_HOST :'amqp://rabbitmq:rabbitmq@localhost'
 class Rabbitmq {
     socketIO=undefined
     constructor() {
