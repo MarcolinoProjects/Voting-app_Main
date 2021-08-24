@@ -78,13 +78,18 @@ func FetchVotingSession(uuid string) (Voting, error) {
 	}
 	return voting, err
 }
-func (v *Voting) SendMessageOnRabbit() {
+func (v *Voting) SendMessageOnRabbit(queue ...string) {
 	marshal, err := json.Marshal(v)
 	if err != nil {
 		panic(err)
 		return
 	}
-	config.AppContext.RabbitConfig.Send(string(marshal), "application/json")
+	if len(queue) > 0 {
+		config.AppContext.RabbitConfig.Send(string(marshal), "application/json", queue[0])
+	} else {
+		config.AppContext.RabbitConfig.Send(string(marshal), "application/json")
+	}
+
 }
 
 //VoteOnCandidateAction send vote to rabbitmq where the worker will take care of the counting part
@@ -107,6 +112,7 @@ func (v *Voting) VoteOnCandidate(uuid string) error {
 		if v.Candidates[i].UUID == uuid {
 			v.Candidates[i].Votes += 1
 			v.PersistOnRedis()
+			v.SendMessageOnRabbit("events")
 			return nil
 		}
 	}

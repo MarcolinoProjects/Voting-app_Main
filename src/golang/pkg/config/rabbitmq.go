@@ -48,9 +48,25 @@ func (r *RabbitConfig) initialize() *RabbitConfig {
 		nil,      // arguments
 	)
 	failOnError(err, "Failed to declare a queue")
+	_, err = ch.QueueDeclare(
+		"events", // name
+		false,    // durable
+		false,    // delete when unused
+		false,    // exclusive
+		false,    // no-wait
+		nil,      // arguments
+	)
+	failOnError(err, "Failed to declare a queue")
 	err = ch.QueueBind(
 		"voting",    // queue name
 		"voting",    // routing key
+		"amq.topic", // exchange
+		false,
+		nil)
+	failOnError(err, "Failed to bind a queue")
+	err = ch.QueueBind(
+		"events",    // queue name
+		"events",    // routing key
 		"amq.topic", // exchange
 		false,
 		nil)
