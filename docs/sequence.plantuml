@@ -1,9 +1,53 @@
 @startuml
-actor User as A
-participant "Golang API"
-participant "node.js(Socket.io) API"
-database Redis
-queue Rabbitmq
+skinparam style strictuml
+hide unlinked
+actor "User interacting in UI" as user
+participant "Golang API" as golang
+participant "Golang Worker" as worker
+participant "node.js(Socket.io) API" as nodejs
+database Redis as cache
+queue Rabbitmq as rabbit
+header Voting App
+footer Page %page% of %lastpage%
+title Create new voting session
+user -> golang: creates new voting session
+activate golang
+golang -> cache: persist data into the cache
+golang -> user: informs everything is okay
+deactivate golang
 
 
+newpage Voting in candidate
+
+group Voting Act
+    user->golang: votes in new candidate
+    activate user
+    activate golang
+    golang->rabbit: sends message to "vote" queue
+    activate rabbit
+    golang->user: vote accepted
+    deactivate golang
+    deactivate user
+end
+
+group Counting Act
+    rabbit->worker: new event on queue "vote"
+    deactivate rabbit
+    activate worker
+    worker->worker: process vote
+    worker->cache: persist result on cache
+    worker->rabbit: sends message to "events" queue
+    deactivate worker
+    activate rabbit
+end
+group Events act
+    rabbit->nodejs: new message on queue "events"
+    deactivate rabbit
+    activate nodejs
+
+    nodejs->user: new voting result available
+    activate user
+    deactivate nodejs
+    deactivate user
+end
 @enduml
