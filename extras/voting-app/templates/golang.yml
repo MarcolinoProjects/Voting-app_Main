@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &myLabels
+    app: web-voting-app
+    part: api
+  name: golang-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *myLabels
+  template:
+    metadata:
+      labels: *myLabels
+    spec:
+      containers:
+        - name: web
+          envFrom:
+            - configMapRef:
+                name: golang
+                optional: false
+          args:
+            - web
+          image: "vorkurk/go-voting-app:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &myLabels
+    app: worker-voting-app
+    part: api
+  name: golang-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *myLabels
+  template:
+    metadata:
+      labels: *myLabels
+    spec:
+      containers:
+        - name: worker
+          envFrom:
+            - configMapRef:
+                name: golang
+                optional: false
+          args:
+            - worker
+          image: "vorkurk/go-voting-app:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: golang
+  labels: &myLabels
+    app: web-voting-app
+    part: api
+spec:
+  selector: *myLabels
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: default
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: golang
+data:
+  REDIS_HOST: redis:6379
+  RABBIT_HOST: amqp://rabbitmq:rabbitmq@rabbit:5672/

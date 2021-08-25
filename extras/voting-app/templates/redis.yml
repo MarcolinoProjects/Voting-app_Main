@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &myLabels
+    app: redis
+  name: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *myLabels
+  template:
+    metadata:
+      labels: *myLabels
+    spec:
+      containers:
+        - name: nginx
+          image: redis:alpine
+          ports:
+            - containerPort: 6379
+              name: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  labels: &myLabels
+    app: redis
+spec:
+  selector: *myLabels
+  ports:
+    - protocol: "TCP"
+      port: 6379
+      targetPort: default
