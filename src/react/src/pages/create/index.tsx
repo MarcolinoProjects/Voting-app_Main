@@ -60,7 +60,7 @@ export default function CreatePage() {
     }
     return (
         <div className={classes.root}>
-            <h2>Give a name for the candidates and for teh voting session!</h2>
+            <h2>Give a name for the candidates and for the voting session!</h2>
             <TextField
                 id="outlined-full-width"
                 label="Label"
