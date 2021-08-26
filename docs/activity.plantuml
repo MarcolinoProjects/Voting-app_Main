@@ -10,7 +10,7 @@ stop
 @enduml
 
 @startuml
-title "Voting in someone"
+title "Voting flow"
 card "Golang API" {
     :User is voting in the session {{uuid}} and votes in Pedro;
     :API send a message with the data from the vote to rabbitmq;
@@ -18,7 +18,7 @@ card "Golang API" {
 card "Golang Worker" {
     :Worker in Golang listen to it cont the
     votes for pedro and save it to redis cache
-    and send a new message to rabbitmq;
+    then sends a new message to rabbitmq;
     floating note: this worker is focused\non count the votes and save the result.
 }
 
@@ -31,7 +31,6 @@ while (someone is watching the result screen?)
   }
   floating note: Node.js API is\nfocused on inform new events.
 endwhile
-
 stop
 
 @enduml
