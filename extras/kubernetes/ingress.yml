@@ -19,20 +19,72 @@ kind: Certificate
 metadata:
   name: "voting.marcolino.dev.br"
 spec:
-  secretName: certificates
+  secretName: certificate-voting.marcolino.dev.br
   issuerRef:
     name: letsencrypt-production
   commonName: voting.marcolino.dev.br
   dnsNames:
     - voting.marcolino.dev.br
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: "voting"
+#   annotations:
+#     kubernetes.io/ingress.class: nginx
+# spec:
+#   rules:
+#     - host: voting.marcolino.dev.br
+#       http:
+#         paths:
+#           - path: /api
+#             backend:
+#               service:
+#                 name: golang
+#                 port:
+#                   number: 80
+#             pathType: Prefix
+#           - path: /events
+#             backend:
+#               service:
+#                 name: nodejs-event-api
+#                 port:
+#                   number: 80
+#             pathType: Prefix
+#           - path: /
+#             backend:
+#               service:
+#                 name: react-ui
+#                 port:
+#                   number: 80
+#             pathType: Prefix
+#   tls:
+#     - hosts:
+#         - voting.marcolino.dev.br
+#       secretName: certificate-voting.marcolino.dev.br
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "voting.copy-and-past.com"
+spec:
+  secretName: certificates
+  issuerRef:
+    name: letsencrypt-production
+  commonName: voting.copy-and-past.com
+  dnsNames:
+    - voting.copy-and-past.com
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: "voting"
+  name: "voting-copy"
+  annotations:
+    kubernetes.io/ingress.class: nginx
 spec:
   rules:
-    - host: voting.marcolino.dev.br
+    - host: voting.copy-and-past.com
       http:
         paths:
           - path: /api
@@ -58,5 +110,5 @@ spec:
             pathType: Prefix
   tls:
     - hosts:
-        - voting.marcolino.dev.br
+        - voting.copy-and-past.com
       secretName: certificates
