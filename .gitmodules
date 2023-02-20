@@ -4,3 +4,6 @@
 [submodule "src/websocket"]
 	path = src/websocket
 	url = git@github.com:VictorMarcolino/-Voting-app_Backend_Ts-websocket.git
+[submodule "src/frontend"]
+	path = src/frontend
+	url = git@github.com:VictorMarcolino/Voting-app_Frontend.git
