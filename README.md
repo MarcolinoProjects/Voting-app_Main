@@ -1,33 +1,20 @@
+# About the Project
+This is a simple voting app that quickly displays the results of the voting. It is event-driven and uses an activity and sequence diagram for its workflow. Images and gifs of the app can be seen below.
 
+## Workflow
+### Activity Diagrams
+* Create new voting session
+  ![](./docs/img/activity-Create_new_voting_session.png)
+* The Voting and Result workflow:
+  ![](./docs/img/activity-Voting_flow.png)
 
-## About The Project
-This is a simple voting app, the main and only feature of this app is to show as soon as possible the result of the voting.
+### Sequence Diagrams
+* Create new voting session
+  ![](./docs/img/sequence-Create_new_voting_session.png)
+* The Voting and Result workflow:
+  ![](./docs/img/sequence-ResultVoting.png)
 
-This is a very simplify event-driven architecture.
-
-Also, it's possible to see it working on the images below.
-
-
-![](./docs/img/demo-voting-app-create.png)
-
-![](./docs/img/demo-voting-app.gif)
-
-### How it works
-
-#### Activity Diagrams
-Create new voting session
-![](./docs/img/activity-Create_new_voting_session.png)
-
-The Voting and Result workflow:
-![](./docs/img/activity-Voting_flow.png)
-#### Sequence Diagrams
-Create new voting session
-![](./docs/img/sequence-Create_new_voting_session.png)
-
-The Voting and Result workflow:
-![](./docs/img/sequence-ResultVoting.png)
-### Were used in this project
-
+### Technologies Used
 * Golang
 * Node.js
 * React
@@ -39,29 +26,16 @@ The Voting and Result workflow:
 * Helm
 * Github Actions
 
-
-
-<!-- GETTING STARTED -->
 ## Getting Started
-run the following commands:
+To begin working with this project, execute the following commands:
 ```sh
 git clone https://github.com/VictorMarcolino/votingMicroservicesApp.git
 docker-compose up -V
 ```
-now access the `localhost:3000`
+Then access `localhost:3000`
 
 ### Prerequisites
+To build this project, you only need Docker with Docker Compose. Then simply execute `docker-compose up`.
 
-To build this project you only need docker with docker-compose, then simply do `docker-compose up` 
-
-
-<!-- CONTACT -->
 ## Contact
-
 Victor Marcolino - marcolino.victor@gmail.com
-
-
-
-
-
-
