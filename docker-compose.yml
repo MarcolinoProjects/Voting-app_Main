@@ -56,7 +56,7 @@ services:
     environment:
       RABBIT_HOST: amqp://rabbitmq:rabbitmq@rabbit:5672/
     build:
-      context: src/nodejs
+      context: src/websocket
       dockerfile: Dockerfile
     networks:
       - voting-network
@@ -64,7 +64,7 @@ services:
     restart: on-failure
     image: vorkurk/react-voting-app:latest
     build:
-      context: src/react
+      context: src/frontend
       dockerfile: Dockerfile
       args:
         SOCKET_IO_PATH: /events/socket.io
