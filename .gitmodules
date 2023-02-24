@@ -1,9 +1,12 @@
 [submodule "src/golang"]
 	path = src/golang
 	url = git@github.com:MarcolinoProjects/Voting-app_Backend_Go-web-and-worker.git
+	branch = main
 [submodule "src/websocket"]
 	path = src/websocket
 	url = git@github.com:MarcolinoProjects/Voting-app_Backend_Ts-websocket.git
+	branch = main
 [submodule "src/frontend"]
 	path = src/frontend
 	url = git@github.com:MarcolinoProjects/Voting-app_Frontend.git
+	branch = main
