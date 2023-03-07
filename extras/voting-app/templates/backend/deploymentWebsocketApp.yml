@@ -17,23 +17,9 @@ spec:
         - name: events-socketio
           image: "vorkurk/nodejs-event-app:{{ .Values.image.tag | default "latest" }}"
           imagePullPolicy: Always
-          env:
-            - name: RABBIT_HOST
-              value: amqp://rabbitmq:rabbitmq@rabbit:5672/
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
           ports:
             - containerPort: 9000
               name: default
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: nodejs-event-api
-  labels: &myLabels
-    app: voting-app
-    part: event-api
-spec:
-  selector: *myLabels
-  ports:
-    - protocol: "TCP"
-      port: 80
-      targetPort: default

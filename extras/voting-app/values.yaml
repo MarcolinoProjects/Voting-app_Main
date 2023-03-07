@@ -1,6 +1,22 @@
 
 image:
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag:
 
-
+rabbitmq:
+  persistence:
+    enabled: false
+  auth:
+    username: rabbitmq
+    password: rabbitmq
+    securePassword: false
+redis:
+  serviceName: voting-app-redis-headless
+  servicePort: 6379
+  master:
+    persistence:
+      enabled: false
+  replica:
+    persistence:
+      enabled: false
+    replicaCount: 0

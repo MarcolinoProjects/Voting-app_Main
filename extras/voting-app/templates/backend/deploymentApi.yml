@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &myLabels
+    app: web-voting-app
+    part: api
+  name: golang-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *myLabels
+  template:
+    metadata:
+      labels: *myLabels
+    spec:
+      containers:
+        - name: web
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+            - configMapRef:
+                name: redis-config
+          args:
+            - web
+          image: "vorkurk/go-voting-app:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: default

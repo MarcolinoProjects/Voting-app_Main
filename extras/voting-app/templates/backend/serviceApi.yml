@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: golang
+  labels: &myLabels
+    app: web-voting-app
+    part: api
+spec:
+  selector: *myLabels
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: default

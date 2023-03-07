@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: &myLabels
+    app: worker-voting-app
+    part: api
+  name: golang-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels: *myLabels
+  template:
+    metadata:
+      labels: *myLabels
+    spec:
+      containers:
+        - name: worker
+          envFrom:
+            - configMapRef:
+                name: rabbitmq-config
+            - configMapRef:
+                name: redis-config
+          args:
+            - worker
+          image: "vorkurk/go-voting-app:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: Always
